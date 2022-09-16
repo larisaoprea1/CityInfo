@@ -1,4 +1,8 @@
+using CityInfo.API;
+using CityInfo.API.DbContexts;
+using CityInfo.API.Services;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -8,6 +12,9 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<CityInfoContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CityInfoContext") ?? throw new InvalidOperationException("Connection string 'CityInfoContext' not found.")));
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -25,6 +32,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
+#if DEBUG
+builder.Services.AddTransient <ILocalMailService, LocalMailService>();
+#else 
+builder.Services.AddTransient<ILocalMailService, CloudMailService>();
+#endif
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+builder.Services.AddSingleton<CitiesDataStore>();
+
+builder.Services.AddDbContext<CityInfoContext>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

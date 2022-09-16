@@ -5,14 +5,15 @@ namespace CityInfo.API
     public class CitiesDataStore
     {
         public List<CityDTO> Cities { get; set; }
-        public static CitiesDataStore Current { get; }= new CitiesDataStore();
+        // public static CitiesDataStore Current { get; } = new CitiesDataStore();
+
         public CitiesDataStore()
         {
             Cities = new List<CityDTO>()
             {
                 new CityDTO()
                 {
-                    Id = 1, 
+                    Id = 1,
                     Name =" New York City",
                     Description = "The one with that big park",
                     PointOfInterests = new List<PointOfInterestDTO>
@@ -71,5 +72,6 @@ namespace CityInfo.API
                 }
             };
         }
+
     }
 }
