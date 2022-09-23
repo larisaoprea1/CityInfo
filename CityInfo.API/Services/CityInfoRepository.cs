@@ -84,5 +84,13 @@ namespace CityInfo.API.Services
         {
             _cityInfoContext.PointOfInterests.Remove(pointOfInterest);  
         }
+        public async Task CreateCityAsync(City city)
+        {
+             _cityInfoContext.Cities.Add(city);
+        }
+        public void DeleteCity(City city)
+        {
+            _cityInfoContext.Cities.Remove(city);
+        }
     }
 }
